@@ -1,6 +1,6 @@
 # Face_recognition
 
-application to recognize and identify faces.
+Application to recognize and identify faces.
 
 Usage:
 
