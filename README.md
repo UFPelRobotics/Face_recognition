@@ -1,5 +1,5 @@
 # Face Recognition in Python
-This project is an implementation of facial recognition in Python for the PinguimBots robotics group. 
+This project is an implementation of facial recognition in Python for the PinguimBots Robotics group. 
 It uses the OpenCV library to capture camera images and perform real-time face recognition.
 
 ## Installation
@@ -15,16 +15,23 @@ You can do this by running the following command in your terminal:
 pip install numpy
 
 ## Usage
-To run the project, simply clone this repository and run the FaceRecognition.py file. 
+To run the project, simply clone this repository and run the FaceDetection.py file. 
 Make sure you have a camera connected to your computer so that the program can capture images.
 
 Open the bash
 
-git clone https://github.com/username/Face_Recognition.git
+Clone this repo using:
+- ```git clone [https://github.com/pinguimbotsathome/Face-detection.git](https://github.com/pinguimbotsathome/Face_recognition.git)```
+
+Then:
+
+ - ```cd repository-name```
 
 cd repository-name
 
-python FaceRecognition.py
+And:
+- ```python FaceDetection.py```
+
 
 We hope that this project is helpful to you and your team in developing robots and facial recognition systems. 
 If you have any questions or suggestions, please do not hesitate to contact us.
