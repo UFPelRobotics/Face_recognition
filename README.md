@@ -27,7 +27,7 @@ Then:
 
  - ```cd repository-name```
 
-cd repository-name
+
 
 And:
 - ```python FaceDetection.py```
