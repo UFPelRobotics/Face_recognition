@@ -7,7 +7,7 @@ path = 'dataset'
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
-face_detect = face_detection.FaceDetection()
+face_detect = face_detection.FaceDetection(min_detection_confidence=0.5)
 
 
 def getImagesAndLabels(path):
@@ -16,32 +16,49 @@ def getImagesAndLabels(path):
     ids = []
 
     for imagePath in imagePaths:
+        print(imagePath)
         img = cv2.imread(imagePath)
-        list_face = face_detect.process(img)
-        if not list_face.detections:
+        if img is None:
+            print(f"[AVISO] ERRO AO LER IMAGEM: {imagePath}")
             continue
 
-        for face in list_face.detections:
+        results = face_detect.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        if not results.detections:
+            print(f"[AVISO] NENHUM ROSTO DETECTADO: {imagePath}")
+            continue
+
+        for face in results.detections:
             face_box = face.location_data.relative_bounding_box
-            xmin = face_box.xmin
-            ymin = face_box.ymin
-            width = face_box.width
-            height = face_box.height
+            xmin, ymin, width, height = face_box.xmin, face_box.ymin, face_box.width, face_box.height
             face_img = img[int(img.shape[0] * ymin):int(img.shape[0] * (ymin + height)),
                        int(img.shape[1] * xmin):int(img.shape[1] * (xmin + width))]
-            face_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2GRAY)
-            faceSamples.append(face_img)
-            ids.append(int(os.path.split(imagePath)[-1].split(".")[1]))
+
+            # Ensure that face_img is not empty before converting to grayscale
+            if face_img.size == 0:
+                print(f"[AVISO] Sem rosto em:{imagePath}!")
+            else:
+                print("else")
+                face_img = cv2.cvtColor(face_img, cv2.COLOR_BGR2GRAY) 
+                faceSamples.append(face_img)
+                #ids.append(int(os.path.split(imagePath)[-1].split(".")[1]))
+                # print(os.path.split(imagePath)[-1].split("_")[1])
+
+                ids.append(0)
 
     return faceSamples, ids
 
 
-print("\n [INFO] Treinando... Isso levará alguns segundos. Aguarde um pouco ...")
+print("\n [INFO] Training")
 
 faces, ids = getImagesAndLabels(path)
-recognizer.train(faces, np.array(ids))
-
-recognizer.write('trainer/trainer.yml')
-print(f"\n [INFO] {np.unique(ids)} faces classificadas. Saindo do programa")
+print(len(faces),len(ids))
+if len(faces) == 0:
+    print("[AVISO] NÃO FORAM ENCONTRADOS ROSTOS PARA REALIZAR O TREINO.")
+else:
+    recognizer.train(faces, np.array(ids))
+    recognizer.write('trainer.yml')
+    print(f"\n [INFO] {len(np.unique(ids))} CLASSIFICADO. FECHANDO O PROGRAMA")
 
 cv2.destroyAllWindows()
+
+
